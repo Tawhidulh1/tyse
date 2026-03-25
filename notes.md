@@ -22,10 +22,13 @@ Big Picture:
 10. Repeat
 
 
+The Queue should be a priority queue with a MaxHeap by rating (atleast for now) and should be the same URL base (ie. Wikipedia.com/Orange and Wikipedia.com/Red should within the same Queue)
+Each item of the Queue should also be a Priority Queue based on importance.
 
 - [x] Initialize git
 - [x] Intilialize project
 - [] Accept seed URL input
+- [] Setup Queue for URLs
 - [] Get Ranking of sites
 - [] Organize Sites into neat queue based on ranking and same site root
 - [] 
