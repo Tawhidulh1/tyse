@@ -3,7 +3,7 @@ package com.Tawhidul.Tyse.model;
 import java.net.URL;
 import java.util.PriorityQueue;
 
-import com.Tawhidul.Tyse.Util.Pair;
+import com.Tawhidul.Tyse.util.Pair;
 
 public final class UrlQueue {
   private UrlQueue() {
