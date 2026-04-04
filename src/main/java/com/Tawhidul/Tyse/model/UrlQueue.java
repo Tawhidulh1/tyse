@@ -1,9 +1,8 @@
 package com.Tawhidul.Tyse.model;
 
-import java.net.URL;
 import java.util.PriorityQueue;
 
-import com.Tawhidul.Tyse.util.Pair;
+import com.Tawhidul.Tyse.util.Url;
 
 public final class UrlQueue {
   private UrlQueue() {
@@ -11,10 +10,11 @@ public final class UrlQueue {
 
   private static PriorityQueue<Url> urlQueue;
   {
-    urlQueue = new PriorityQueue<>((a, b) -> (int) (b.rating - a.rating));
+    urlQueue = new PriorityQueue<>((a, b) -> (int) (b.getRating() - a.getRating()));
   }
 
-  public boolean add(Url url) {
+  // incomplete
+  public static boolean add(Url url) {
     if (isSubUrl(url)) {
 
     } else {
@@ -23,29 +23,13 @@ public final class UrlQueue {
     return true;
   }
 
-  public boolean isSubUrl(Url url) {
+  // incomplete
+  public static boolean isSubUrl(Url url) {
     return false;
   }
 
-  private class Url {
-    double rating;
-    String name;
-    PriorityQueue<Pair> pairQueue;
-
-    // Left = always rating RATING | NAME
-    Url(double rating, String name) {
-      this.rating = rating;
-      this.name = name;
-      pairQueue = new PriorityQueue<>((a, b) -> (int) (a.getLeft()) - (int) (b.getLeft()));
-    }
-
-    void add(double rating, String name) {
-      Pair pair = new Pair<Double, String>(rating, name);
-      pairQueue.add(pair);
-    }
-
-    void remove(Pair pair) {
-      pairQueue.remove(pair);
-    }
+  public static Url getUrlAndRemove() {
+    return urlQueue.remove();
   }
+
 }
