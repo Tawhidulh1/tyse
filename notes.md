@@ -11,7 +11,7 @@ Requirements:
 
 Big Picture: 
 1. Receive seed url 
-2. Set up Queue for Urls
+2. Set up Queue for Urls | note: this should be seperate frorm the Spider
 3. Download the contents/html from the URL
 4. Parse it
 5. Check for duplicate content. If not duplicate, store the content. 

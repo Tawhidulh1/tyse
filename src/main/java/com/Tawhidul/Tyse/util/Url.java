@@ -8,7 +8,7 @@ public class Url {
   private PriorityQueue<Pair> pairQueue;
 
   // Left = always rating RATING | NAME
-  Url(double rating, String name) {
+  public Url(double rating, String name) {
     this.rating = rating;
     this.name = name;
     pairQueue = new PriorityQueue<>((a, b) -> (int) (a.getLeft()) - (int) (b.getLeft()));

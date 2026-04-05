@@ -14,19 +14,32 @@ import com.Tawhidul.Tyse.util.Url;
 
 public class Spider {
 
-  Cleaner cleaner;
-  Safelist basicSafelist;
+  private Cleaner cleaner;
+  private Safelist basicSafelist;
+
+  private Connection currentConnection;
+  private Document currentDocument;
 
   // incomplete
   public Spider(String seedUrl) {
     Connection root = Jsoup.connect(seedUrl);
+    currentDocument = new Document(seedUrl);
+    currentConnection = root;
     basicSafelist = Safelist.basic();
     cleaner = new Cleaner(basicSafelist);
+  }
 
+  public void run(Url url) throws IOException {
+    run(url, 0);
   }
 
   // incomplete
-  public void run(Url url, int runCtr) {
+  public void run(Url url, int runCtr) throws IOException {
+    String urlName = url.getName();
+    currentConnection = Jsoup.connect(urlName);
+    currentDocument = getDocument();
+    System.out.println(currentDocument.body());
+
     if (runCtr == 0) {
       return;
     }
@@ -36,6 +49,13 @@ public class Spider {
   }
 
   // Note: improve exception handling when possible
+
+  // incomplete
+  public Document getDocument() throws IOException {
+    Document document = currentConnection.get();
+    document = cleaner.clean(document);
+    return document;
+  }
 
   // incomplete
   public Document getDocument(Connection connection) throws IOException {
