@@ -38,7 +38,8 @@ public class Spider {
     String urlName = url.getName();
     currentConnection = Jsoup.connect(urlName);
     currentDocument = getDocument();
-    System.out.println(currentDocument.body());
+
+    List<Url> urlList = getUrls(currentDocument);
 
     if (runCtr == 0) {
       return;

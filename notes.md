@@ -28,7 +28,8 @@ Each item of the Queue should also be a Priority Queue based on importance.
 - [x] Initialize git
 - [x] Intilialize project
 - [x] Accept seed URL input
-- [] Setup overall method structure
+- [x] Setup overall method structure (finished partially)
+- [] Add ratings to webpages 
 - [] Setup Queue for URLs
 - [] Get Ranking of sites
 - [] Organize Sites into neat queue based on ranking and same site root
