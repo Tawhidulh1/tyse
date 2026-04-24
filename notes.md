@@ -3,7 +3,6 @@
 Requirements:
 * Save Urls, Meta Data and Page Data
 * Follow rules such as the robots.txt in websites
-* Avoid being blocked by sites 
 * Fallback on errors and long hangs. Additionally ignore duplicate pages/content.
 * Rank/Prioritize urls 
 * Option to stop or limit the crawler to certain numbers of pages through inputs or estimation
@@ -25,15 +24,10 @@ Big Picture:
 The Queue should be a priority queue with a MaxHeap by rating (atleast for now) and should be the same URL base (ie. Wikipedia.com/Orange and Wikipedia.com/Red should within the same Queue)
 Each item of the Queue should also be a Priority Queue based on importance.
 
-- [x] Initialize git
-- [x] Intilialize project
-- [x] Accept seed URL input
-- [x] Setup overall method structure (finished partially)
-- [] Add ratings to webpages 
-- [] Setup Queue for URLs
-- [] Get Ranking of sites
-- [] Organize Sites into neat queue based on ranking and same site root
-- [] 
 
-
+- [x] Create a WebPage class that stores basic information and metadata for webpages such as Url and HTML -- note I can prolly drop the Pair and Url classes
+- [x] Restructure the Spider Class
+- [x] Accept SeedUrl as input for Spider Class constructor
+- [x] Fetch the Document of the SeedUrl (create a method)
+- [] Parse the document and extract URLS (create a method)
 

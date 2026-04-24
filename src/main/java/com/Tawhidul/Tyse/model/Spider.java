@@ -10,64 +10,35 @@ import org.jsoup.nodes.Document;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Safelist;
 
-import com.Tawhidul.Tyse.util.Url;
-
 public class Spider {
 
-  private Cleaner cleaner;
-  private Safelist basicSafelist;
-
-  private Connection currentConnection;
-  private Document currentDocument;
-
-  // incomplete
   public Spider(String seedUrl) {
-    Connection root = Jsoup.connect(seedUrl);
-    currentDocument = new Document(seedUrl);
-    currentConnection = root;
-    basicSafelist = Safelist.basic();
-    cleaner = new Cleaner(basicSafelist);
+    System.out.println("New Spider Class Created");
+    System.out.println("New Spider Class Created");
+    System.out.println("New Spider Class Created");
   }
 
-  public void run(Url url) throws IOException {
-    run(url, 0);
+  private Document fetch(String url) {
+    if (!(url.toLowerCase().substring(0, 7).equals("http://")
+        || url.toLowerCase().subSequence(0, 8).equals("https://"))) {
+      return null;
+    }
+    try {
+      Connection urlConnection = Jsoup.connect(url).ignoreContentType(true);
+      Document urlDocument = urlConnection.get();
+      return urlDocument;
+
+    } catch (IOException ioException) {
+      return null;
+    }
   }
 
-  // incomplete
-  public void run(Url url, int runCtr) throws IOException {
-    String urlName = url.getName();
-    currentConnection = Jsoup.connect(urlName);
-    currentDocument = getDocument();
-
-    List<Url> urlList = getUrls(currentDocument);
-
-    if (runCtr == 0) {
-      return;
+  private List<WebPage> extractUrls(Document document) {
+    List<WebPage> webPages = new ArrayList<>();
+    if (document == null) {
+      return webPages;
     }
 
-    Url nextUrl = UrlQueue.getUrlAndRemove();
-    run(nextUrl, runCtr - 1);
+    return null;
   }
-
-  // Note: improve exception handling when possible
-
-  // incomplete
-  public Document getDocument() throws IOException {
-    Document document = currentConnection.get();
-    document = cleaner.clean(document);
-    return document;
-  }
-
-  // incomplete
-  public Document getDocument(Connection connection) throws IOException {
-    Document document = connection.get();
-    document = cleaner.clean(document);
-    return document;
-  }
-
-  // incomplete
-  public List<Url> getUrls(Document document) {
-    return new ArrayList<>();
-  }
-
 }
