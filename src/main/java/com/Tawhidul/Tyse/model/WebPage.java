@@ -1,34 +1,32 @@
 package com.Tawhidul.Tyse.model;
 
-import org.jsoup.nodes.Document;
-
 public class WebPage {
-  private String Url;
-  private String HtmlPage;
+  private String url;
+  private String htmlPage;
 
   public WebPage(String url) {
-    this.Url = url;
-    HtmlPage = null;
+    this.url = url;
+    htmlPage = null;
   }
 
-  public WebPage(String Url, String HtmlPage) {
-    this.Url = Url;
-    this.HtmlPage = HtmlPage;
+  public WebPage(String url, String htmlPage) {
+    this.url = url;
+    this.htmlPage = htmlPage;
   }
 
   public String getUrl() {
-    return Url;
+    return url;
   }
 
   public String getHtmlPage() {
-    return HtmlPage;
+    return htmlPage;
   }
 
-  public void setUrl(String Url) {
-    this.Url = Url;
+  public void setUrl(String url) {
+    this.url = url;
   }
 
-  public void setHtmlPage(String HtmlPage) {
-    this.HtmlPage = HtmlPage;
+  public void setHtmlPage(String htmlPage) {
+    this.htmlPage = htmlPage;
   }
 }

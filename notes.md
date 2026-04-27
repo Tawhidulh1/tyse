@@ -29,5 +29,7 @@ Each item of the Queue should also be a Priority Queue based on importance.
 - [x] Restructure the Spider Class
 - [x] Accept SeedUrl as input for Spider Class constructor
 - [x] Fetch the Document of the SeedUrl (create a method)
-- [] Parse the document and extract URLS (create a method)
+- [] Set up parsing for robots.txt after fetching
+- [] Set up caching for robots.txt after fetching
+- [] Parse the document and extract URLS 
 

@@ -15,6 +15,6 @@ public class TyseApplication {
 
   public static void main(String[] args) throws Exception {
     SpringApplication.run(TyseApplication.class, args);
-    Spider spider = new Spider("htt://google.com");
+    Spider spider = new Spider("https://google.com");
   }
 }
