@@ -10,54 +10,43 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Safelist;
+import org.jsoup.select.Elements;
 
 public class Spider {
 
   private static final ConcurrentHashMap<String, List<String>> robotsCache = new ConcurrentHashMap<>();
 
+  // TEMPORARY!!
+  private static List<String> urls;
+
   public Spider(String seedUrl) {
-    fetch(seedUrl);
+    urls = new ArrayList<String>();
+    getUrls(seedUrl, 5);
+    System.out.println(urls);
   }
 
-  private Document fetch(String url) {
-    if (!(url.toLowerCase().substring(0, 7).equals("http://")
-        || url.toLowerCase().subSequence(0, 8).equals("https://"))) {
-      return null;
+  public void getUrls(String url, int runs) {
+    if (runs == 0) {
+      return;
     }
     try {
-      Connection urlConnection = Jsoup.connect(url).ignoreContentType(true);
-      Document urlDocument = urlConnection.get();
-      parseRobotsTxt(url);
-      return urlDocument;
-
-    } catch (IOException ioException) {
-      return null;
+      Document d = Jsoup.connect(url).get();
+      Elements links = d.select("a[href]");
+      for (Element link : links) {
+        String linkAsString = link.attr("href");
+        urlHandler(linkAsString);
+        getUrls(linkAsString, runs - 1);
+      }
+    } catch (Exception e) {
+      System.out.println("Error with URL:" + url + " " + e);
     }
   }
 
-  private List<WebPage> extractUrls(Document document) {
-    List<WebPage> webPages = new ArrayList<>();
-    if (document == null) {
-      return webPages;
-    }
-
-    return null;
+  public void urlHandler(String url) {
+    urls.add(url);
   }
 
-  private List<String> parseRobotsTxt(String url) throws IOException {
-    List<String> parsedRobots = new ArrayList<>();
-    if (url.substring(url.length() - 1).equals("/")) {
-      url = url + "robots.txt";
-    } else {
-      url = url + "/robots.txt";
-    }
-    Connection connection = Jsoup.connect(url).ignoreContentType(true);
-    Document document = connection.get();
-    String robotsBody = document.text();
-    System.out.println(robotsBody);
-
-    return parsedRobots;
-  }
 }

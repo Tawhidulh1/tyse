@@ -1,5 +1,6 @@
 package com.Tawhidul.Tyse.model;
 
+// Might not use this
 public class WebPage {
   private String url;
   private String htmlPage;
