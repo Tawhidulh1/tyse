@@ -1,19 +1,15 @@
 package com.Tawhidul.Tyse.model;
 
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Attribute;
-import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.safety.Cleaner;
-import org.jsoup.safety.Safelist;
 import org.jsoup.select.Elements;
 
 public class Spider {
@@ -37,24 +33,34 @@ public class Spider {
 
     try {
       URI uri = new URI(url);
-      String host = uri.getHost();
+      String host = uri.getScheme() + "://" + uri.getHost();
 
-      if (!urlsCache.contains(host)) {
-        System.out.println("New host url found: " + host);
-        String robotsUrl = host + "/robots.txt";
-        if (!robotsCache.containsKey(robotsUrl)) {
-          System.out.println("New Robots.txt found: " + robotsUrl);
-          robotsCache.put(robotsUrl, new ArrayList<String>());
-          List<String> robotsList = robotsCache.get(robotsUrl);
-          parseRobots(robotsList);
+      String robotsUrl = host + "/robots.txt";
+      if (!robotsCache.containsKey(robotsUrl)) {
+        System.out.println("New Robots.txt found: " + robotsUrl);
+
+        robotsCache.put(robotsUrl, new ArrayList<String>());
+        List<String> robotsList = robotsCache.get(robotsUrl);
+
+        Document robotsDoc = Jsoup.connect(robotsUrl).get();
+        BufferedReader reader = new BufferedReader(new StringReader(robotsDoc.wholeText()));
+        String line = reader.readLine();
+        while (line != null) {
+          robotsList.add(line);
+          line = reader.readLine();
         }
+
+        parseRobots(robotsList);
+      }
+      String fullUrl = uri.normalize().toASCIIString();
+      if (!urlsCache.contains(fullUrl)) {
+
       }
 
       Document d = Jsoup.connect(url).get();
       Elements links = d.select("a[href]");
       for (Element link : links) {
         String linkAsString = link.attr("href");
-        urlHandler(linkAsString);
         getUrls(linkAsString, runs - 1);
       }
     } catch (Exception e) {
@@ -68,10 +74,6 @@ public class Spider {
 
   public boolean validateUrl(String url) {
     return true;
-  }
-
-  public void urlHandler(String url) {
-    urls.add(url);
   }
 
 }
