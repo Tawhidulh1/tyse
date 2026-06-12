@@ -58,7 +58,7 @@ public class Spider {
 
       appendUrlToQueue(url);
 
-      // TODO givent links/urls of List<String> continue fetching for more without an
+      // TODO: givent links/urls of List<String> continue fetching for more without an
       // infinite loop and minimizing resources
       List<String> links = fetchUrls(d);
 
@@ -108,7 +108,7 @@ public class Spider {
   }
 
   public void appendUrlToQueue(String url) {
-    // TODO implement an actual queue system
+    // TODO: implement an actual queue system
     if (!urlsCache.contains(url)) {
       urls.add(url);
     }
