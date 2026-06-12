@@ -5,8 +5,14 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -30,14 +36,14 @@ public class Spider {
 
   public void getUrls(String url, int runs) {
     if (runs == 0 || !isValidUrl(url)) {
+      System.out.println("Ended link search");
       return;
     }
-
     try {
 
       URI uri = new URI(url);
       String host = uri.getScheme() + "://" + uri.getHost();
-      System.out.println("Found host: " + host);
+      System.out.println("Found host(" + runs + "): " + host);
       appendRobotsUrl(host);
 
       Connection connection = Jsoup.connect(url)
@@ -51,16 +57,29 @@ public class Spider {
       Document d = connection.get();
 
       appendUrlToQueue(url);
-      Elements links = d.select("a[href]");
-      for (Element link : links) {
-        String linkAsString = link.attr("href");
-        getUrls(linkAsString, runs - 1);
-      }
+      // TODO givent links/urls of List<String> continue fetching for more without an
+      // infinite loop and minimizing resources
+      List<String> links = fetchUrls(d);
+
+      // for (String link : links) {
+      // System.out.println("ran inside Element link : links");
+      // getUrls(link, runs - 1);
+      // }
 
     } catch (Exception e) {
       System.err.println("Error with url: " + url);
       e.printStackTrace();
     }
+  }
+
+  public List<String> fetchUrls(Document document) {
+    Elements elements = document.select("a[href]");
+    Set<String> links = new HashSet<>();
+    elements.stream()
+        .map(element -> element.attr("href").toString())
+        .forEach(link -> links.add(link));
+
+    return List.copyOf(links);
   }
 
   public void appendRobotsUrl(String host) throws IOException {
