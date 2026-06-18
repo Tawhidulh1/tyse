@@ -26,46 +26,58 @@ public class Spider {
   private static final ConcurrentHashMap.KeySetView<String, Boolean> urlsCache = ConcurrentHashMap.newKeySet();
 
   // TEMPORARY!!
-  private static List<String> urls;
+  private List<String> urls;
 
   public Spider(String seedUrl) {
     urls = new ArrayList<String>();
-    getUrls(seedUrl, 2);
+    urls.add(seedUrl);
+    crawl(2);
     System.out.println("Got urls " + urls);
   }
 
-  public void getUrls(String url, int runs) {
-    if (runs == 0 || !isValidUrl(url)) {
-      System.out.println("Ended link search");
+  private void crawl(int runs) {
+    if (runs <= 0) {
+      return;
+    }
+    String url = getUrlFromQueue();
+    if (url == null) {
+      return;
+    }
+
+    crawlUrls(url);
+    crawlDocuments(url);
+
+    crawl(runs - 1);
+  }
+
+  private void crawlUrls(String url) {
+    if (!isValidUrl(url)) {
+      System.out.println("Ended url search");
       return;
     }
     try {
 
       URI uri = new URI(url);
       String host = uri.getScheme() + "://" + uri.getHost();
-      System.out.println("Found host(" + runs + "): " + host);
+      System.out.println("Found host: " + host);
       appendRobotsUrl(host);
 
       Connection connection = Jsoup.connect(url)
           .ignoreHttpErrors(true);
-
       connection.execute();
+
       if (connection.response().statusCode() != 200) {
         return;
       }
 
-      Document d = connection.get();
+      Document d = connection.response().parse();
 
-      appendUrlToQueue(url);
-
-      // TODO: givent links/urls of List<String> continue fetching for more without an
-      // infinite loop and minimizing resources
-      List<String> links = fetchUrls(d);
-
-      // for (String link : links) {
-      // System.out.println("ran inside Element link : links");
-      // getUrls(link, runs - 1);
-      // }
+      Elements elements = d.select("a[href]");
+      Set<String> links = new HashSet<>();
+      elements.stream()
+          .map(element -> element.attr("abs:href"))
+          .forEach(link -> links.add(link));
+      links.iterator().forEachRemaining((a) -> appendUrlToQueue(a));
 
     } catch (Exception e) {
       System.err.println("Error with url: " + url);
@@ -73,20 +85,25 @@ public class Spider {
     }
   }
 
-  public List<String> fetchUrls(Document document) {
-    Elements elements = document.select("a[href]");
-    Set<String> links = new HashSet<>();
-    elements.stream()
-        .map(element -> element.attr("href").toString())
-        .forEach(link -> links.add(link));
+  private void crawlDocuments(String url) {
+    try {
+      URI uri = new URI(url);
 
-    return List.copyOf(links);
+      // Ex. https://google.com
+      // TODO ensure url is not disallowed in robots.txt
+      String host = uri.getScheme() + "://" + uri.getHost();
+      if (robotsCache.containsKey(host)) {
+        List<String> robots = robotsCache.get(host);
+
+      }
+
+    } catch (Exception e) {
+
+    }
   }
 
   public void appendRobotsUrl(String host) throws IOException {
     if (!robotsCache.containsKey(host)) {
-      robotsCache.put(host, new ArrayList<String>());
-      List<String> robotsList = robotsCache.get(host);
 
       String robotsUrl = host + "/robots.txt";
       Connection connection = Jsoup.connect(robotsUrl)
@@ -96,8 +113,13 @@ public class Spider {
       if (connection.response().statusCode() != 200) {
         return;
       }
+      robotsCache.put(host, new ArrayList<String>());
+      List<String> robotsList = robotsCache.get(host);
+
       Document robotsDoc = connection.get();
 
+      // TODO parse robots for the crawler specefic user-agent and ignore comments and
+      // non-important lines
       BufferedReader br = new BufferedReader(new StringReader(robotsDoc.wholeText()));
       String currentLine = br.readLine();
       while (currentLine != null) {
@@ -107,11 +129,20 @@ public class Spider {
     }
   }
 
+  // TODO: implement an actual queue system
+
   public void appendUrlToQueue(String url) {
-    // TODO: implement an actual queue system
     if (!urlsCache.contains(url)) {
+      urlsCache.add(url);
       urls.add(url);
     }
+  }
+
+  public String getUrlFromQueue() {
+    if (urls.isEmpty()) {
+      return null;
+    }
+    return urls.remove(0);
   }
 
   public boolean isValidUrl(String url) {
