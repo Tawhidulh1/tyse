@@ -91,6 +91,7 @@ public class Spider {
 
       // Ex. https://google.com
       // TODO ensure url is not disallowed in robots.txt
+      // Issue URL: https://github.com/Tawhidulh1/tyse/issues/2
       String host = uri.getScheme() + "://" + uri.getHost();
       if (robotsCache.containsKey(host)) {
         List<String> robots = robotsCache.get(host);
@@ -119,6 +120,7 @@ public class Spider {
       Document robotsDoc = connection.get();
 
       // TODO parse robots for the crawler specefic user-agent and ignore comments and
+      // Issue URL: https://github.com/Tawhidulh1/tyse/issues/1
       // non-important lines
       BufferedReader br = new BufferedReader(new StringReader(robotsDoc.wholeText()));
       String currentLine = br.readLine();
