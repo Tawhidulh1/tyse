@@ -22,13 +22,16 @@ import org.jsoup.select.Elements;
 
 public class Spider {
 
-  private static final ConcurrentHashMap<String, List<String>> robotsCache = new ConcurrentHashMap<>();
+  private static final ConcurrentHashMap<String, Set<String>> robotsCache = new ConcurrentHashMap<>();
   private static final ConcurrentHashMap.KeySetView<String, Boolean> urlsCache = ConcurrentHashMap.newKeySet();
 
   // TEMPORARY!!
   private List<String> urls;
 
+  private String userAgent;
+
   public Spider(String seedUrl) {
+    userAgent = "TyseBot";
     urls = new ArrayList<String>();
     urls.add(seedUrl);
     crawl(2);
@@ -63,10 +66,13 @@ public class Spider {
       appendRobotsUrl(host);
 
       Connection connection = Jsoup.connect(url)
-          .ignoreHttpErrors(true);
+          .ignoreHttpErrors(true)
+          .userAgent(userAgent)
+          .timeout(5000);
       connection.execute();
 
       if (connection.response().statusCode() != 200) {
+        System.out.println("not 200 code: " + url);
         return;
       }
 
@@ -93,7 +99,7 @@ public class Spider {
       // TODO ensure url is not disallowed in robots.txt
       String host = uri.getScheme() + "://" + uri.getHost();
       if (robotsCache.containsKey(host)) {
-        List<String> robots = robotsCache.get(host);
+        Set<String> robots = robotsCache.get(host);
 
       }
 
@@ -107,25 +113,44 @@ public class Spider {
 
       String robotsUrl = host + "/robots.txt";
       Connection connection = Jsoup.connect(robotsUrl)
-          .ignoreHttpErrors(true);
+          .ignoreHttpErrors(true)
+          .userAgent(userAgent)
+          .timeout(5000);
       connection.execute();
 
       if (connection.response().statusCode() != 200) {
         return;
       }
-      robotsCache.put(host, new ArrayList<String>());
-      List<String> robotsList = robotsCache.get(host);
+      Set<String> robotsSet = new HashSet<>();
 
-      Document robotsDoc = connection.get();
+      Document robotsDoc = connection.response().parse();
 
-      // TODO parse robots for the crawler specefic user-agent and ignore comments and
-      // non-important lines
       BufferedReader br = new BufferedReader(new StringReader(robotsDoc.wholeText()));
       String currentLine = br.readLine();
+
+      boolean appropriateAgent = false;
       while (currentLine != null) {
-        robotsList.add(currentLine);
+        String trimmedLine = currentLine.trim();
+
+        if (trimmedLine.startsWith("#") || trimmedLine.isEmpty()) {
+          continue;
+        }
+
+        String lowerCaseTrimmedLine = trimmedLine.toLowerCase();
+        if (lowerCaseTrimmedLine.startsWith("user-agent:")) {
+          String agent = trimmedLine.substring(11);
+          appropriateAgent = (agent.equals("*") || agent.equals(userAgent));
+        }
+        if (appropriateAgent && lowerCaseTrimmedLine.startsWith("disallow:")) {
+          String path = trimmedLine.substring(9);
+          if (!path.isEmpty()) {
+            robotsSet.add(path);
+          }
+        }
+
         currentLine = br.readLine();
       }
+      robotsCache.put(host, robotsSet);
     }
   }
 
@@ -145,12 +170,14 @@ public class Spider {
     return urls.remove(0);
   }
 
+  // TODO implement robots path check from robotsCache
   public boolean isValidUrl(String url) {
     try {
       URI uri = new URI(url);
       if (uri.getScheme() == null) {
         return false;
       }
+
     } catch (Exception e) {
       System.err.println("Unable to validateUrl: " + url);
       e.printStackTrace();
