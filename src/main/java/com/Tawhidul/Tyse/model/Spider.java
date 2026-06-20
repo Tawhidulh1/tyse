@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -23,6 +24,7 @@ import org.jsoup.select.Elements;
 public class Spider {
 
   private static final ConcurrentHashMap<String, Set<String>> robotsCache = new ConcurrentHashMap<>();
+  private static final ConcurrentHashMap<String, List<String>> index = new ConcurrentHashMap<>();
   private static final ConcurrentHashMap.KeySetView<String, Boolean> urlsCache = ConcurrentHashMap.newKeySet();
 
   // TEMPORARY!!
@@ -93,18 +95,36 @@ public class Spider {
 
   private void crawlDocuments(String url) {
     try {
-      URI uri = new URI(url);
-
-      // Ex. https://google.com
-      // TODO ensure url is not disallowed in robots.txt
-      String host = uri.getScheme() + "://" + uri.getHost();
-      if (robotsCache.containsKey(host)) {
-        Set<String> robots = robotsCache.get(host);
-
+      if (!isValidUrl(url)) {
+        return;
       }
 
-    } catch (Exception e) {
+      Connection connection = Jsoup.connect(url)
+          .ignoreHttpErrors(true)
+          .timeout(5000)
+          .userAgent(userAgent);
+      connection.execute();
 
+      if (connection.response().statusCode() != 200) {
+        System.out.println("not 200 code: " + url);
+        return;
+      }
+
+      Document document = connection.response().parse();
+      StringTokenizer st = new StringTokenizer(document.title());
+      while (st.hasMoreTokens()) {
+        String cur = st.nextToken();
+        index.putIfAbsent(cur, new ArrayList<>()).add(url);
+      }
+      st = new StringTokenizer(document.body().text());
+      while (st.hasMoreTokens()) {
+        String cur = st.nextToken();
+        index.putIfAbsent(cur, new ArrayList<>()).add(url);
+      }
+
+    } catch (IOException e) {
+      System.err.println("Error(document): " + url);
+      e.printStackTrace();
     }
   }
 
@@ -170,8 +190,6 @@ public class Spider {
     return urls.remove(0);
   }
 
-  // TODO implement robots path check from robotsCache
-  // Issue URL: https://github.com/Tawhidulh1/tyse/issues/3
   public boolean isValidUrl(String url) {
     boolean validity = true;
     try {
