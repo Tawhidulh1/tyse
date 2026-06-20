@@ -97,7 +97,6 @@ public class Spider {
 
       // Ex. https://google.com
       // TODO ensure url is not disallowed in robots.txt
-      // Issue URL: https://github.com/Tawhidulh1/tyse/issues/2
       String host = uri.getScheme() + "://" + uri.getHost();
       if (robotsCache.containsKey(host)) {
         Set<String> robots = robotsCache.get(host);
@@ -174,17 +173,23 @@ public class Spider {
   // TODO implement robots path check from robotsCache
   // Issue URL: https://github.com/Tawhidulh1/tyse/issues/3
   public boolean isValidUrl(String url) {
+    boolean validity = true;
     try {
       URI uri = new URI(url);
+      String host = uri.getScheme() + "://" + uri.getHost();
       if (uri.getScheme() == null) {
         return false;
+      }
+      if (robotsCache.containsKey(host)) {
+        Set<String> disallowedPaths = robotsCache.get(host);
+        String path = uri.getRawPath();
+        validity = !disallowedPaths.stream().anyMatch((str) -> path.startsWith(str));
       }
 
     } catch (Exception e) {
       System.err.println("Unable to validateUrl: " + url);
       e.printStackTrace();
     }
-    return true;
+    return validity;
   }
-
 }
