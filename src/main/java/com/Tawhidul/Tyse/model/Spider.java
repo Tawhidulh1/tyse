@@ -172,6 +172,7 @@ public class Spider {
   }
 
   // TODO implement robots path check from robotsCache
+  // Issue URL: https://github.com/Tawhidulh1/tyse/issues/3
   public boolean isValidUrl(String url) {
     try {
       URI uri = new URI(url);
