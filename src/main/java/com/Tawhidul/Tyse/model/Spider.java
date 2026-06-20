@@ -97,6 +97,7 @@ public class Spider {
 
       // Ex. https://google.com
       // TODO ensure url is not disallowed in robots.txt
+      // Issue URL: https://github.com/Tawhidulh1/tyse/issues/2
       String host = uri.getScheme() + "://" + uri.getHost();
       if (robotsCache.containsKey(host)) {
         Set<String> robots = robotsCache.get(host);
