@@ -123,10 +123,7 @@ public class Spider {
       st = new StringTokenizer(document.body().text());
       while (st.hasMoreTokens()) {
         String cur = st.nextToken();
-        if (!index.contains(cur)) {
-          continue;
-        }
-        index.putIfAbsent(cur, new ArrayList<>()).add(url);
+        index.computeIfAbsent(cur, list -> new ArrayList<>()).add(url);
       }
 
     } catch (IOException e) {
