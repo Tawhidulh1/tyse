@@ -41,6 +41,7 @@ public class Spider {
   }
 
   private void crawl(int runs) {
+    System.out.println("Crawl(" + runs + ")");
     if (runs <= 0) {
       return;
     }
@@ -48,7 +49,6 @@ public class Spider {
     if (url == null) {
       return;
     }
-
     crawlUrls(url);
     crawlDocuments(url);
 
@@ -56,6 +56,7 @@ public class Spider {
   }
 
   private void crawlUrls(String url) {
+    System.out.println("fetching urls: " + url);
     if (!isValidUrl(url)) {
       System.out.println("Ended url search");
       return;
@@ -94,6 +95,8 @@ public class Spider {
   }
 
   private void crawlDocuments(String url) {
+    System.out.println("fetching documents: " + url);
+
     try {
       if (!isValidUrl(url)) {
         return;
@@ -112,13 +115,17 @@ public class Spider {
 
       Document document = connection.response().parse();
       StringTokenizer st = new StringTokenizer(document.title());
+
       while (st.hasMoreTokens()) {
         String cur = st.nextToken();
-        index.putIfAbsent(cur, new ArrayList<>()).add(url);
+        index.computeIfAbsent(cur, list -> new ArrayList<>()).add(url);
       }
       st = new StringTokenizer(document.body().text());
       while (st.hasMoreTokens()) {
         String cur = st.nextToken();
+        if (!index.contains(cur)) {
+          continue;
+        }
         index.putIfAbsent(cur, new ArrayList<>()).add(url);
       }
 
@@ -129,6 +136,7 @@ public class Spider {
   }
 
   public void appendRobotsUrl(String host) throws IOException {
+    System.out.println("attempting to cache robots.txt: " + host + "/robots.txt");
     if (!robotsCache.containsKey(host)) {
 
       String robotsUrl = host + "/robots.txt";
@@ -170,6 +178,7 @@ public class Spider {
 
         currentLine = br.readLine();
       }
+      System.out.println("caching robots success: " + robotsUrl);
       robotsCache.put(host, robotsSet);
     }
   }
@@ -177,6 +186,7 @@ public class Spider {
   // TODO: implement an actual queue system
 
   public void appendUrlToQueue(String url) {
+    System.out.println("attempting to add url to collection: " + url);
     if (!urlsCache.contains(url)) {
       urlsCache.add(url);
       urls.add(url);
@@ -201,7 +211,21 @@ public class Spider {
       if (robotsCache.containsKey(host)) {
         Set<String> disallowedPaths = robotsCache.get(host);
         String path = uri.getRawPath();
-        validity = !disallowedPaths.stream().anyMatch((str) -> path.startsWith(str));
+        for (String disallowed : disallowedPaths) {
+          validity = !path.startsWith(disallowed);
+          if (!validity) {
+            break;
+          }
+          int firstAsterisk = disallowed.indexOf("*");
+          if (firstAsterisk != -1) {
+            boolean startsWithDisallowed = path.startsWith(disallowed.substring(0, firstAsterisk));
+            boolean endsWithDisallowed = path.endsWith(disallowed.substring(firstAsterisk + 1));
+            if (endsWithDisallowed && startsWithDisallowed) {
+              validity = false;
+              break;
+            }
+          }
+        }
       }
 
     } catch (Exception e) {
