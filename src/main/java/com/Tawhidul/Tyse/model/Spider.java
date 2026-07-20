@@ -36,7 +36,7 @@ public class Spider {
     userAgent = "TyseBot";
     urls = new ArrayList<String>();
     urls.add(seedUrl);
-    crawl(10);
+    crawl(5);
     System.out.println("Got urls " + urls);
   }
 

@@ -4,12 +4,23 @@
     <title>tyse</title>   
   </head>  
   <body>
-    <form action="/search" method="get">
+    <form action="/search" method="get" id='search'>
       <input type="text" name="q" id="searchInput" placeholder="search tyse here"> 
       <button type="submit">search</button>
      </form> 
   </body>
   <script>
-    
+    document.getElementById('search').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const query = document.getElementById('searchInput').value;
+      const response = await fetch('/search?q=' + query);
+      const searchResults = await response.json();
+      const results = document.createElement('div');
+      for (const url of searchResults.urls) {
+        var text = document.createTextNode(url);
+        results.appendChild(text);
+      }
+      document.body.appendChild(results);
+    });
   </script>
 </html>
