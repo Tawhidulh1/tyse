@@ -36,7 +36,7 @@ public class Spider {
     userAgent = "TyseBot";
     urls = new ArrayList<String>();
     urls.add(seedUrl);
-    crawl(2);
+    crawl(100);
     System.out.println("Got urls " + urls);
   }
 
@@ -45,7 +45,7 @@ public class Spider {
     if (runs <= 0) {
       return;
     }
-    String url = getUrlFromQueue();
+    String url = getUrl();
     if (url == null) {
       return;
     }
@@ -86,7 +86,7 @@ public class Spider {
       elements.stream()
           .map(element -> element.attr("abs:href"))
           .forEach(link -> links.add(link));
-      links.iterator().forEachRemaining((a) -> appendUrlToQueue(a));
+      links.iterator().forEachRemaining((a) -> appendUrl(a));
 
     } catch (Exception e) {
       System.err.println("Error with url: " + url);
@@ -154,10 +154,12 @@ public class Spider {
       String currentLine = br.readLine();
 
       boolean appropriateAgent = false;
+      int lineCtr = 0;
       while (currentLine != null) {
         String trimmedLine = currentLine.trim();
 
         if (trimmedLine.startsWith("#") || trimmedLine.isEmpty()) {
+          currentLine = br.readLine();
           continue;
         }
 
@@ -172,17 +174,19 @@ public class Spider {
             robotsSet.add(path);
           }
         }
-
+        if (lineCtr % 100 == 0) {
+          System.out.println(lineCtr);
+        }
         currentLine = br.readLine();
+        lineCtr++;
       }
+
       System.out.println("caching robots success: " + robotsUrl);
       robotsCache.put(host, robotsSet);
     }
   }
 
-  // TODO: implement an actual queue system
-
-  public void appendUrlToQueue(String url) {
+  public void appendUrl(String url) {
     System.out.println("attempting to add url to collection: " + url);
     if (!urlsCache.contains(url)) {
       urlsCache.add(url);
@@ -190,7 +194,7 @@ public class Spider {
     }
   }
 
-  public String getUrlFromQueue() {
+  public String getUrl() {
     if (urls.isEmpty()) {
       return null;
     }
@@ -230,5 +234,10 @@ public class Spider {
       e.printStackTrace();
     }
     return validity;
+  }
+
+  public static List<String> getUrlsFromIndex(String word) {
+    List<String> indexedList = index.get(word);
+    return indexedList != null ? indexedList : new ArrayList<>();
   }
 }
