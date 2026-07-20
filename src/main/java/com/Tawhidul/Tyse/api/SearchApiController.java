@@ -1,7 +1,9 @@
 package com.Tawhidul.Tyse.api;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +17,11 @@ public class SearchApiController {
   @GetMapping("/search")
   public String getSearch(@RequestParam String q) {
     StringTokenizer st = new StringTokenizer(q);
-    List<String> results = new ArrayList<>();
+    Set<String> results = new HashSet<>();
     while (st.hasMoreTokens()) {
       String word = st.nextToken();
-      List<String> indexedList = Spider.getUrlsFromIndex(word);
+      Set<String> indexedList = Spider.getUrlsFromIndex(word);
+
       results.addAll(indexedList);
     }
     return results.toString();

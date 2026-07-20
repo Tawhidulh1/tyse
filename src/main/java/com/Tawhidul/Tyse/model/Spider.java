@@ -24,7 +24,7 @@ import org.jsoup.select.Elements;
 public class Spider {
 
   private static final ConcurrentHashMap<String, Set<String>> robotsCache = new ConcurrentHashMap<>();
-  private static final ConcurrentHashMap<String, List<String>> index = new ConcurrentHashMap<>();
+  private static final ConcurrentHashMap<String, Set<String>> index = new ConcurrentHashMap<>();
   private static final ConcurrentHashMap.KeySetView<String, Boolean> urlsCache = ConcurrentHashMap.newKeySet();
 
   // TEMPORARY!!
@@ -36,7 +36,7 @@ public class Spider {
     userAgent = "TyseBot";
     urls = new ArrayList<String>();
     urls.add(seedUrl);
-    crawl(100);
+    crawl(10);
     System.out.println("Got urls " + urls);
   }
 
@@ -117,13 +117,13 @@ public class Spider {
       StringTokenizer st = new StringTokenizer(document.title());
 
       while (st.hasMoreTokens()) {
-        String cur = st.nextToken();
-        index.computeIfAbsent(cur, list -> new ArrayList<>()).add(url);
+        String cur = st.nextToken().toLowerCase();
+        index.computeIfAbsent(cur, list -> new HashSet<>()).add(url);
       }
       st = new StringTokenizer(document.body().text());
       while (st.hasMoreTokens()) {
-        String cur = st.nextToken();
-        index.computeIfAbsent(cur, list -> new ArrayList<>()).add(url);
+        String cur = st.nextToken().toLowerCase();
+        index.computeIfAbsent(cur, list -> new HashSet<>()).add(url);
       }
 
     } catch (IOException e) {
@@ -236,8 +236,8 @@ public class Spider {
     return validity;
   }
 
-  public static List<String> getUrlsFromIndex(String word) {
-    List<String> indexedList = index.get(word);
-    return indexedList != null ? indexedList : new ArrayList<>();
+  public static Set<String> getUrlsFromIndex(String word) {
+    Set<String> indexedList = index.get(word.toLowerCase());
+    return indexedList != null ? indexedList : new HashSet<>();
   }
 }
