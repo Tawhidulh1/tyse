@@ -1,16 +1,19 @@
 package com.Tawhidul.Tyse.dto;
 
-import java.util.Set;
+import java.util.List;
+
+import com.Tawhidul.Tyse.model.IndexedPage;
 
 public class SearchResult {
 
-  private Set<String> urls;
+	private List<IndexedPage> pages;
 
-  public SearchResult(Set<String> urls) {
-    this.urls = urls;
-  }
+	public SearchResult(List<IndexedPage> pages) {
+		this.pages = pages;
+	}
 
-  public Set<String> getUrls() {
-    return urls;
-  }
+	public List<IndexedPage> getPages() {
+		return this.pages;
+	}
+
 }
