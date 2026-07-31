@@ -19,7 +19,8 @@ public class TyseApplication {
 		ApplicationContext context = SpringApplication.run(TyseApplication.class, args);
 		SearchService searchService = context.getBean(SearchService.class);
 		// Spider examplecomSpider = new Spider("https://example.com", searchService);
-		Spider wikipediaSpider = new Spider("https://en.wikipedia.org", searchService);
+		// Spider wikipediaSpider = new Spider("https://en.wikipedia.org",
+		// searchService);
 
 	}
 }
