@@ -22,12 +22,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.Tawhidul.Tyse.constants.ApplicationConstants;
 import com.Tawhidul.Tyse.service.SearchService;
 
 public class Spider {
 
 	private static final ConcurrentHashMap<String, Set<String>> robotsCache = new ConcurrentHashMap<>();
-	private static final ConcurrentHashMap<String, Set<String>> index = new ConcurrentHashMap<>();
 	private static final ConcurrentHashMap.KeySetView<String, Boolean> urlsCache = ConcurrentHashMap.newKeySet();
 
 	// TEMPORARY!!
@@ -121,7 +121,8 @@ public class Spider {
 
 			Document document = connection.response().parse();
 			IndexedPage page = new IndexedPage(url, document.title(), document.body().wholeText());
-			searchService.put(page);
+			if (ApplicationConstants.elasticsearchEnabled)
+				searchService.put(page);
 
 		} catch (IOException e) {
 			System.err.println("Error(document): " + url);

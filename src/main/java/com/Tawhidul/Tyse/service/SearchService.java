@@ -7,8 +7,10 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.Tawhidul.Tyse.constants.ApplicationConstants;
 import com.Tawhidul.Tyse.model.IndexedPage;
 import com.Tawhidul.Tyse.repository.SearchRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,16 +19,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class SearchService {
 
+	@Autowired(required = false)
 	private SearchRepository searchRepository;
-
-	public SearchService(SearchRepository searchRepository) {
-		this.searchRepository = searchRepository;
-	}
 
 	public List<IndexedPage> search(String word) {
 		if (word == null)
 			return null;
-		List<IndexedPage> pages = searchRepository.findByTitleContainingOrBodyContaining(word, word);
+		List<IndexedPage> pages = new ArrayList<>();
+		if (ApplicationConstants.elasticsearchEnabled)
+			pages = searchRepository.findByTitleContainingOrBodyContaining(word, word);
 
 		if (pages.isEmpty()) {
 			try {
@@ -51,6 +52,8 @@ public class SearchService {
 					IndexedPage page = new IndexedPage(url.asText(), title.asText(), content.asText());
 					pages.add(page);
 				}
+				if (ApplicationConstants.elasticsearchEnabled)
+					searchRepository.saveAll(pages);
 				searchRepository.saveAll(pages);
 
 			} catch (Exception e) {
