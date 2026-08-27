@@ -25,7 +25,7 @@ public class SearchApiController {
 		this.searchService = searchService;
 	}
 
-	@GetMapping("/search")
+	@GetMapping("/api/search")
 	public ResponseEntity<SearchResult> getSearch(@RequestParam String q) {
 		StringTokenizer st = new StringTokenizer(q);
 		List<IndexedPage> results = new ArrayList<>();

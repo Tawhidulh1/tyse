@@ -1,7 +1,6 @@
-document.getElementById('search').addEventListener('submit', async function(event) {
-      event.preventDefault();
-      const query = document.getElementById('searchInput').value;
-      const response = await fetch('/search?q=' + query);
+async function runSearch(query) {
+			history.pushState(null, '', '/search?q='+query);
+      const response = await fetch('/api/search?q=' + query);
       const searchResults = await response.json();
       const results = document.createElement('div');
       for (const page of searchResults.pages) {
@@ -11,5 +10,15 @@ document.getElementById('search').addEventListener('submit', async function(even
         results.appendChild(link);
       }
       document.body.appendChild(results);
-    });
+    }
 
+document.getElementById('search').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const query = document.getElementById('searchInput').value;
+			runSearch(query);	
+});
+const param = new URLSearchParams(window.location.search);
+const query = param.get('q');
+if (query) {
+	runSearch(query);
+}
