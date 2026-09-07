@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.Tawhidul.Tyse.constants.ApplicationConstants;
 import com.Tawhidul.Tyse.model.IndexedPage;
@@ -22,6 +24,9 @@ public class SearchService {
 	@Autowired(required = false)
 	private SearchRepository searchRepository;
 
+	@Value("${searxng.host.uri:http://localhost:8080}")
+	private String searxngHostUri;
+
 	public List<IndexedPage> search(String query) {
 		if (query == null)
 			return null;
@@ -34,7 +39,12 @@ public class SearchService {
 				pages = new ArrayList<>();
 
 				HttpClient client = HttpClient.newHttpClient();
-				URI requestUri = new URI("http://localhost:8888/search?q=" + query + "&format=json");
+
+				// URI requestUri = new URI("http://localhost:8888/search?q=" + query +
+				// "&format=json");
+				URI requestUri = UriComponentsBuilder
+						.fromUriString(searxngHostUri + "/search?q={q}&format=json")
+						.build(query);
 				HttpRequest request = HttpRequest.newBuilder()
 						.uri(requestUri)
 						.GET()
