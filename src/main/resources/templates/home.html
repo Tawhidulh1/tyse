@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>tyse</title>   
+		<link rel="stylesheet" href="/styles.css">
+  </head>  
+  <body>
+		<div class="home">
+			<div class="titleBox"> 
+				<h1 class="tyse-title">Tyse</h1>
+			</div>
+			<div class="inputBox"> 
+    	<form action="/search" method="get" id='search'>
+    	  <input autocomplete="off" type="text" name="q" id="searchInput" class="input" placeholder="search here"> 
+				<div class="suggestions" id="suggestions"></div>
+    	 </form> 
+			</div>
+		</div>
+
+		<script src="/script.js"></script>
+  </body>
+  </html>

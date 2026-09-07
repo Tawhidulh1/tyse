@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<link rel="stylesheet" href="/results.css">
+	</head>
+	<body>
+		<div class="searchRow">
+			<a href="/" id="logo" class="sideBox">T</a>
+			<div class="inputBox" id="resultInput">
+			<form action="/search" method="get" id='search'>
+    	  <input autocomplete="off" type="text" name="q" id="searchInput" class="input" placeholder="search here"> 
+				<div class="suggestions" id="suggestions"></div>
+				<button class="sideBox" type="submit">Search</button>
+    	 </form> 
+			</div>
+		</div>
+		<div id="results">
+		</div>
+		<script src="/script.js"></script>
+	</body>
+</html>

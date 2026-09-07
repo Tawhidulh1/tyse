@@ -8,6 +8,6 @@ public class SearchPageController {
 
 	@GetMapping("/search")
 	public String getSearchPage() {
-		return "search";
+		return "result";
 	}
 }

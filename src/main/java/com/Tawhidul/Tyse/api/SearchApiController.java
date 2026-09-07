@@ -27,13 +27,14 @@ public class SearchApiController {
 
 	@GetMapping("/api/search")
 	public ResponseEntity<SearchResult> getSearch(@RequestParam String q) {
-		StringTokenizer st = new StringTokenizer(q);
-		List<IndexedPage> results = new ArrayList<>();
-		while (st.hasMoreTokens()) {
-			String word = st.nextToken();
-			List<IndexedPage> page = searchService.search(word);
-			results.addAll(page);
-		}
+		// StringTokenizer st = new StringTokenizer(q);
+		List<IndexedPage> results;
+		// while (st.hasMoreTokens()) {
+		// String word = st.nextToken();
+		// List<IndexedPage> page = searchService.search(word);
+		// results.addAll(page);
+		// }
+		results = searchService.search(q);
 		SearchResult searchResults = new SearchResult(results);
 		return ResponseEntity.ok(searchResults);
 	}

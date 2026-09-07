@@ -10,6 +10,7 @@ public class IndexedPage {
 	private String url;
 	private String title;
 	private String body;
+	private String thumbnail;
 
 	public IndexedPage(String url, String title, String body) {
 		this.url = url;
@@ -23,6 +24,14 @@ public class IndexedPage {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+	public String getThumbnail() {
+		return thumbnail;
 	}
 
 	public String getTitle() {

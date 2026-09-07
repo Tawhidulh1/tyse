@@ -1,0 +1,34 @@
+# Read the documentation before extending the defaults:
+# https://docs.searxng.org/admin/settings/
+
+use_default_settings: true
+
+server:
+  secret_key: "blahblahblah"
+
+search:
+  formats:
+    - html
+    - json
+
+engines:
+  - name: bing
+    disabled: false
+  - name: mojeek
+    disabled: false
+  - name: yandex
+    disabled: false
+  - name: wikipedia
+    disabled: false
+  - name: brave
+    disabled: true
+  - name: google cse
+    disabled: true
+  - name: qwant
+    disabled: true
+  - name: startpage
+    disabled: true
+  - name: yahoo
+    disabled: true
+  - name: duckduckgo
+    disabled: true

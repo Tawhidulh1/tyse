@@ -19,8 +19,9 @@ document.getElementById('search').addEventListener('submit',function(event) {
 });
 const param = new URLSearchParams(window.location.search);
 const query = param.get('q');
-document.getElementById('searchInput').value = query;
-
 if (query) {
 	runSearch(query);	
 }
+
+const logo = document.getElementById('logo');
+logo.href= = '/';

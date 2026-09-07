@@ -22,19 +22,19 @@ public class SearchService {
 	@Autowired(required = false)
 	private SearchRepository searchRepository;
 
-	public List<IndexedPage> search(String word) {
-		if (word == null)
+	public List<IndexedPage> search(String query) {
+		if (query == null)
 			return null;
 		List<IndexedPage> pages = new ArrayList<>();
 		if (ApplicationConstants.elasticsearchEnabled)
-			pages = searchRepository.findByTitleContainingOrBodyContaining(word, word);
+			pages = searchRepository.findByTitleContainingOrBodyContaining(query, query);
 
 		if (pages.isEmpty()) {
 			try {
 				pages = new ArrayList<>();
 
 				HttpClient client = HttpClient.newHttpClient();
-				URI requestUri = new URI("http://localhost:8888/search?q=" + word + "&format=json");
+				URI requestUri = new URI("http://localhost:8888/search?q=" + query + "&format=json");
 				HttpRequest request = HttpRequest.newBuilder()
 						.uri(requestUri)
 						.GET()
@@ -54,7 +54,6 @@ public class SearchService {
 				}
 				if (ApplicationConstants.elasticsearchEnabled)
 					searchRepository.saveAll(pages);
-				searchRepository.saveAll(pages);
 
 			} catch (Exception e) {
 				e.printStackTrace();

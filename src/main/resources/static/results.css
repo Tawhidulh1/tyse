@@ -1,0 +1,111 @@
+body {
+	background-color: #152335;
+	margin: 0;
+	margin-top: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding-left: 8%;
+}
+
+::selection {
+	color: #fff;
+	background: #2daa67;
+}
+
+.searchRow {
+	display: flex;
+	align-items: stretch;
+	gap: 0;
+	margin-top: 10px;
+	margin: 0;
+}
+
+.inputBox {
+	width: 40vw;
+	max-width: 90vw;
+	height: 44px;
+	border: 1px solid #2b4052;
+	background: #23374a;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+}
+
+.sideBox {
+	min-width: 44px;
+	height: 44px;
+	padding: 0 12px;
+	border: 1px solid #2b4052;
+	background: #23374a;
+	box-sizing: border-box;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+	font-size: 14px;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.inputBox form {
+	display: flex;
+	width: 100%;
+	align-items: center;
+}
+
+.inputBox input {
+	border: none;
+	outline: none;
+	flex: 1;
+	font-size: 16px;
+	font-family: arial, sans-serif;
+	color: #fff;
+	background: transparent;
+	padding: 0 16px;
+}
+
+#results {
+	width: 580px;
+	max-width: 90vw;
+	margin-top: 20px;
+}
+
+#results a {
+	color: #2daa67;
+	text-decoration: underline;
+	display: block;
+	margin-bottom: 12px;
+}
+
+button {
+	height: 100%;
+	padding: 0 20px;
+	background: #2ca765;
+	color: #fff;
+	border: none;
+	font-size: 15px;
+	font-family: arial, sans-serif;
+	font-weight: 600;
+	cursor: pointer;
+	white-space: nowrap;
+	flex-shrink: 0;
+	transition: background 0.2s ease;
+}
+
+#logo {
+	background-color: #456655;
+	text-decoration: none;
+	color: #fff
+}
+
+button:hover,
+#logo:hover {
+	background: #248f56;
+}
+
+button:active,
+#logo:active {
+	background: #1d7645;
+}
