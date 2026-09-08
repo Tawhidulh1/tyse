@@ -24,7 +24,7 @@ public class SearchService {
 	@Autowired(required = false)
 	private SearchRepository searchRepository;
 
-	@Value("${searxng.host.uri:http://localhost:8080}")
+	@Value("${searxng.host.uri:http://localhost:8888}")
 	private String searxngHostUri;
 
 	public List<IndexedPage> search(String query) {
