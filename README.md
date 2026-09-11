@@ -1,6 +1,10 @@
 # [tyse](https://tyse.duckdns.org/)
 > A basic meta search-engine written in java.
 > powered by [SearXNG](https://github.com/searxng/searxng).
+
+![Hackatime Badge](https://hackatime.hackclub.com/api/v1/badge/U094WDEGNF3/Tawhidulh1/tyse)
+
+
 <img width="1920" height="965" alt="Screenshot_20260910_214445-1" src="https://github.com/user-attachments/assets/5dbfe6b5-2184-4d61-93ab-7b0c53f9ed82" />
 
 ## Features
