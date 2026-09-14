@@ -25,7 +25,7 @@ I wanted to understand how search engines work and improve on spring framework. 
 git clone https://github.com/Tawhidulh1/tyse.git
 ./mvnw spring-boot:run
 ```
-Access the site: http://localhost:8080 
+After setup access the site: http://localhost:8080 
 
 ## License 
-TBD
+[MIT License](https://github.com/Tawhidulh1/tyse/blob/main/LICENSE)
