@@ -16,5 +16,16 @@
 ## Why
 I wanted to understand how search engines work and improve on spring framework. I initially wanted to create a full search engine with a crawler, but later transitioned to a SearXNG wrapper due to lack of resources and usability. 
 
+## Quickstart
+**Prerequisites**
+* Java 17+
+* Docker 
+
+```
+git clone https://github.com/Tawhidulh1/tyse.git
+./mvnw spring-boot:run
+```
+Access the site: http://localhost:8080 
+
 ## License 
 TBD
