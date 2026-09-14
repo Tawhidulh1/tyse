@@ -7,6 +7,9 @@
 
 <img width="1920" height="965" alt="Screenshot_20260910_214445-1" src="https://github.com/user-attachments/assets/5dbfe6b5-2184-4d61-93ab-7b0c53f9ed82" />
 
+[click here for a demo](https://tyse.duckdns.org/)
+
+
 ## Features
 * Search/query the internet
 * Standard /search?q=%s search parameter
@@ -26,6 +29,5 @@ git clone https://github.com/Tawhidulh1/tyse.git
 ./mvnw spring-boot:run
 ```
 After setup access the site: http://localhost:8080 
-
 ## License 
 [MIT License](https://github.com/Tawhidulh1/tyse/blob/main/LICENSE)
